@@ -6,8 +6,6 @@
 
 
 */
-
-// this code is in a total working condition as expected //// it is stored for future reference 
 #include<Wire.h>
 #include<EEPROM.h>
 #define deviceAddress 0b1101000 //0x68 the adddress of DS3231 clock module 
@@ -188,9 +186,6 @@ void loop() {
 
 
 
-  //    if(counter2 ==5);counter2 = 1;
-  //  }
-
 
 
 
@@ -278,74 +273,7 @@ void loop() {
    // lcd.setCursor(5, 1);
     //lcd.print("Ahead");
   }
-//  else if (counter == 6 && counter1 == 0) {
-//    lcd.setCursor(0, 0);
-//    lcd.print("Edit Date");
-//    lcd.setCursor(0, 1);
-//    lcd.print("and Time");
-//  }
-//  else if (counter == 7) {
-//    lcd.setCursor(0, 0);
-//    lcd.print("Edit Alarm");
-//  }
 
-//  else if (counter1 == 1 && counter ==5) {
-//    //lcd.clear();
-//    //counter = 0;
-//    lcd.setCursor(0, 0);
-//
-//    lcd.print("Time: ");
-//    ////lcd.print(counter3); lcd.print(" ");
-//    lcd.setCursor(8, 0);
-//    lcd.print(':');
-//    lcd.setCursor(11, 0);
-//    lcd.print(":");
-//    // // lcd.print(" "); lcd.print(" " ); lcd.print(':');
-//    ////lcd.print(" " ); lcd.print(0);
-//
-//    lcd.setCursor(0, 1); // first argument which column second argument which row (up or down )
-//    lcd.print("Day");
-//    lcd.print(" : ");
-//    ////lcd.print(0); lcd.print(0);
-//    lcd.setCursor(8, 1);
-//    lcd.print("/");
-//    // //lcd.print(0); lcd.print(0);
-//    lcd.setCursor(11, 1);
-//    lcd.print("/");
-//    lcd.print("  "); //lcd.print(0);
-//    lcd.setCursor(0, 0); //re=position the cursor
-//
-//    if (counter2 == 1) {
-//      ClockEdit(0, 1, 0x03, "Day");
-//      //lcd.setCursor(0,1)
-//    }
-//    else if (counter2 == 2) {
-//
-//      ClockEdit(6, 1, 0x04, "Date");
-//    }
-//    else if (counter2 == 3) {
-//      ClockEdit(9, 1, 0x05, "Month");
-//    }
-//    else if (counter2 == 4) {
-//      ClockEdit(12, 1, 0x06, "Year");
-//    }
-//    else if (counter2 == 5) {
-//      ClockEdit(6, 0, 0x02, "Hour");
-//    }
-//
-//    else if (counter2 == 6) {
-//      ClockEdit(9, 0, 0x01, "Minute");
-//    }
-//
-//    else if (counter2 == 7) {
-//      ClockEdit(12, 0, 0x00, "Second");
-//    }
-//
-//
-//
-//    if (counter2 == 8) counter2 = 1;
-//    //
-//  }
 
     else if(counter1 == 1 && counter ==5){
       //counter =0;
@@ -374,54 +302,77 @@ void loop() {
     lcd.setCursor(0, 0);
 
     lcd.print("Time: ");
-    ////lcd.print(counter3); lcd.print(" ");
     lcd.setCursor(8, 0);
     lcd.print(':');
     lcd.setCursor(11, 0);
     lcd.print(":");
 
-    lcd.setCursor(0, 1); // first argument which column second argument which row (up or down )
-    lcd.print("Day");
-    lcd.print(" : ");
-    lcd.setCursor(8, 1);
-    lcd.print("/");
-    lcd.setCursor(11, 1);
-    lcd.print("/");
-    lcd.print("  "); //lcd.print(0);
-    lcd.setCursor(0, 0); //re=position the cursor
+
 
     if (counter2 == 1) {
-      ClockEdit(0, 1, 0x03, "Day");
-    }
-    else if (counter2 == 2) {
-
-      ClockEdit(6, 1, 0x04, "Date");
-    }
-    else if (counter2 == 3) {
-      ClockEdit(9, 1, 0x05, "Month");
-    }
-    else if (counter2 == 4) {
-      ClockEdit(12, 1, 0x06, "Year");
-    }
-    else if (counter2 == 5) {
       ClockEdit(6, 0, 0x02, "Hour");
     }
 
-    else if (counter2 == 6) {
+    else if (counter2 == 2) {
       ClockEdit(9, 0, 0x01, "Minute");
     }
 
-    else if (counter2 == 7) {
+    else if (counter2 == 3) {
       ClockEdit(12, 0, 0x00, "Second");
     }
 
 
-
-//    if (counter2 == 8) counter2 = 1;
+ if(counter2 ==4)counter2 =1;
      }
-//      else if (counter2 ==3 && counter1 ==2){
-//        lcd.setCursor(0,0);lcd.print("You did it");
-     // }
+     else if(counter2_2 ==2 && counter1 ==2){
+
+      
+    lcd.setCursor(0, 0);
+
+    lcd.print("Date: ");
+    lcd.setCursor(8, 0);
+    lcd.print(':');
+    lcd.setCursor(11, 0);
+    lcd.print(":");
+
+   
+
+      if (counter2 == 1)  {
+
+      ClockEdit(6, 0, 0x04, "Date");
+    }
+    else if (counter2 == 2) {
+      ClockEdit(9, 0, 0x05, "Month");
+    }
+    else if (counter2 ==3) {
+      ClockEdit(12, 0, 0x06, "Year");
+    }
+    if(counter2 ==4)counter2 =1;
+      
+     }
+     
+
+     else if(counter2_2 ==3 && counter1 ==2){
+
+      /////////// alaram ///////////////
+      lcd.setCursor(0,0);
+      lcd.print("Alaram Done");
+
+      
+     }
+
+     else if(counter2_2 ==4 && counter1 ==2){
+
+      lcd.setCursor(0,0);
+      lcd.print("Day : ");
+
+         if (counter2 == 1) {
+      ClockEdit(6, 0, 0x03, "Day");
+     
+    }
+     if(counter2 ==2)counter2 =1;
+      
+     }
 
 
 
@@ -769,9 +720,6 @@ void CollectData()
   hrs = (Hours >> 4) * 10 + (Hours & 15);
   mins = (Minutes >> 4) * 10 + (Minutes & 15);
   secs = (Seconds >> 4) * 10 + (Seconds & 15);
-  //if(counter2 ==1)counter3 = hrs;
-  // else if(counter2 ==2) counter3 = mins;
-  //else if (counter2 ==3) counter3 = secs;
 }
 
 
@@ -854,7 +802,7 @@ void ClockEdit(int column, int row, int reg_address, String bucket) {
   value = counter3;
 
   lcd.setCursor(column, row);
-  if (counter2 == 1) {
+  if (counter2 == 1 && counter2_2 ==4&&counter1 ==2) {
 
     if (counter3 == 0)lcd.print("non");
     else if (counter3 == 1)lcd.print("Sun");
@@ -866,8 +814,6 @@ void ClockEdit(int column, int row, int reg_address, String bucket) {
     else if (counter3 == 7)lcd.print("Sat");
   }
   else lcd.print(counter3);
-  //lcd.print(counter3);
-  //lcd.print("  ");
   value = ((value / 10) << 4) + (value % 10);
   Wire.beginTransmission(deviceAddress);
   Wire.write(reg_address);                     // assessing the hour  register
