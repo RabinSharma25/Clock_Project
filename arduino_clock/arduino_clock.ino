@@ -1,72 +1,7 @@
-/*
-        _a
-      f|_|b
-      e|_|c
-        d
-
-
-*/
 #include<Wire.h>
-#include<EEPROM.h>
 #define deviceAddress 0b1101000 //0x68 the adddress of DS3231 clock module 
 #include<LiquidCrystal_I2C.h> // including the library for the display 
-LiquidCrystal_I2C lcd(0x27, 16, 2); // creating an display object (lcd), with address and size mentioned
-
-///////////// PORTD pins to segement display /////////////
-const uint8_t pinA = 2;
-const uint8_t pinB = 3;
-const uint8_t pinC = 4;
-const uint8_t pinD = 5;
-const uint8_t pinE = 6;
-const uint8_t pinF = 7;
-//
-const uint8_t pinG = 0; // set to port b //connect to pin 8 // as the first bit shall correspond to 0;
-
-////////////////// PORTB pins to segement display ////
-const uint8_t cat1 = 1; // connect of pin 9 of arduino
-const uint8_t cat2 = 2; // connect  to pin 10 of arduino
-const uint8_t cat3 = 3; // donnect to pin 11 of arduino
-const uint8_t cat4 = 4; // connect to pin 12 of arduino
-
-int value1 ;
-int value2 ;
-int freq = 5;
-int first_val ;
-int second_val;
-
-// setting up the digits in binary for ease
-
-int val0D = B11111100; // fedcba00
-int val0B = B00011110; // 0000000g
-
-int val1D = B00011000;
-int val1B = B00011110;
-
-int val2D = B01101100;
-int val2B = B00011111;
-
-int val3D = B00111100;
-int val3B = B00011111;
-
-int val4D = B10011000;
-int val4B = B00011111;
-
-int val5D = B10110100;
-int val5B = B00011111;
-
-int val6D = B11110100;
-int val6B = B00011111;
-
-int val7D = B00011100;
-int val7B = B00011110;
-
-int val8D = B11111100;
-int val8B = B00011111;
-
-int val9D = B10111100;
-int val9B = B00011111;
-
-//////////// variables to store the data from the clock module //////////////
+LiquidCrystal_I2C lcd(0x27, 16, 2); // creating an display object (lcd), with address and size ment
 
 byte Seconds ;
 byte Minutes ;
@@ -130,16 +65,10 @@ void setup() {
   lcd.setCursor(0, 0);// setting up the lcd cursor to left top
 
 
-  DDRD |= (1 << pinA | 1 << pinB | 1 << pinC | 1 << pinD | 1 << pinE | 1 << pinF); // setting all pins to output
-  DDRB |= (1 << pinG);
-  DDRB |= (1 << cat1 | 1 << cat2 | 1 << cat3 | 1 << cat4);
-  //Serial.print(val0);
-
   pinMode(btnPin, INPUT); // declaring pin 13 as input
   pinMode(button1, INPUT);
   pinMode(button2, INPUT_PULLUP);
   pinMode(button3, INPUT_PULLUP);
-  pinMode(12, OUTPUT);
 
 
 }
@@ -150,9 +79,7 @@ void loop() {
   button_state_new = digitalRead(btnPin);  // reading the state of  btnpin
   if (button_state_old == 1 && button_state_new == 0) {
     lcd.clear();
-    counter++; // incrementing the counter variable to flip the pages in the screen
-    //if(counter !=6||counter!=7||counter!=5) counter1 = 1;
-    //lcd.clear(); // clearing the screen for removing the previous output
+    counter++; // incrementing the counter variable to flip the pages in the scree
 
 
   }
@@ -171,25 +98,15 @@ void loop() {
   btst_new2 = digitalRead(button2);  // reading the state of  btnpin
   if (btst_old2 == 1 && btst_new2 == 0) {
     counter3 = 0;
-    if(counter == 5 && counter1 ==1)counter2_2++;
-    else if(counter ==5 && counter ==2) counter2++;
-    else counter2++;
+    if(counter == 3 && counter1 ==1)counter2_2++;
+    else if(counter == 3 && counter1 ==2) counter2++;
 
   }
-
-
-
+  
   btst_new3 = digitalRead(button3);  // reading the state of  btnpin
   if (btst_old3 == 1 && btst_new3 == 0) {
     counter3 ++;
   }
-
-
-
-
-
-
-  ///////////////////////////////////////
 
   CollectData(); // function that collects data from the clock module
 
@@ -197,69 +114,10 @@ void loop() {
   if (counter == 1) {
 
     ShowOnLcd(); // function that prints on the lcd screen
-    digitalWrite(12, HIGH); // for turning off the last digit in the segment display after a page fli
 
   }
 
   else if (counter == 2) {
-
-    if (curHr < 9) curHr += 24;
-    if (ArHr < 9) ArHr += 24;
-
-    float diff = HrConverter(ArHr, ArMin) - HrConverter(hrs, mins);
-
-    float to_min = diff * 60; // converting to minutes ;;
-    int hrss = to_min / 60;
-    int  minss = int(to_min) % 60;
-    //lcd.setCursor(0,0);
-    //lcd.print("Segment Time");
-
-    value1 = hrss ; // passing the first value to be printed in the segment display
-    value2 = minss; // passing the second value to be printed in the segment display
-    digit_splitter(value1); // function that splits the two digit number into two seprate ditits for printing in the segement display (value1 as argument)
-    display_seg_value1_f(); // function that prints the first ditit of value1 in the screen
-    display_seg_value1_l(); // function that prints the last digit of the value1 in the screen
-    digit_splitter(value2);  // function that splits the two digit number into two seprate ditits for printing in the segement display (value2 as argumemnt)
-    display_seg_value2_f();  //function that prints the first ditit of value2 in the screen
-    display_seg_value2_l();  // function that prints the last digit of the value2 in the screen
-
-
-  }
-
-  else if (counter == 3) {
-
-    ///// here we show the configured time for the alaram by the useer in the lcd display (when conter is 3 that is set to page 3 )///
-
-    digitalWrite(12, HIGH); // turing off the last digit in the segement display(bug);
-    lcd.setCursor(1, 0); // setting the cursor position
-    lcd.print("Alarm Set for :");
-    lcd.setCursor(1, 1);
-    if (ArHrs < 10 && ArMins > 10) {
-      lcd.print(0);
-      lcd.print(ArHrs);
-      lcd.print(":");
-      lcd.print(ArMins);
-    }
-    else if (ArMins < 10 && ArHrs > 10) {
-      lcd.print(ArHrs);
-      lcd.print(":");
-      lcd.print(0);
-      lcd.print(ArMins);
-    }
-    else if (ArHrs < 10 && ArMins < 10) {
-      lcd.print(0);
-      lcd.print(ArHrs);
-      lcd.print(":");
-      lcd.print(0);
-      lcd.print(ArMins);
-    }
-    else {
-      lcd.print(ArHrs);
-      lcd.print(":");
-      lcd.print(ArMins);
-    }
-  }
-  else if (counter == 4) {
     lcd.setCursor(0, 0);
     lcd.print("Temp :");
     lcd.print(32); lcd.print(" deg"); lcd.print(" C");
@@ -267,7 +125,7 @@ void loop() {
     lcd.print(":");
     lcd.print(100); lcd.print(" deg"); lcd.print(" F");
   }
-  else if (counter == 5 && counter1 ==0) {
+  else if (counter == 3 && counter1 ==0) {
     lcd.setCursor(1, 0);
     lcd.print("Setting Menu");
    // lcd.setCursor(5, 1);
@@ -275,7 +133,7 @@ void loop() {
   }
 
 
-    else if(counter1 == 1 && counter ==5){
+    else if(counter1 == 1 && counter ==3){
       //counter =0;
        lcd.setCursor(1,0);lcd.print("SetTime");
       lcd.setCursor(10,0);lcd.print("SetAlr");
@@ -374,332 +232,14 @@ void loop() {
       
      }
 
-
-
-
-
-
   button_state_old = button_state_new; // updating the variable
   btst_old1 = btst_new1;
   btst_old2 = btst_new2;
-  // btst_old3 = btst_new3;
-  if (counter == 6) counter = 1; // setting the max num of pages in the screen to 3
+  if (counter == 4) counter = 1; // setting the max num of pages in the screen to 3
   if (counter1 == 3) counter1 = 0;
 
 }
 
-
-
-void display_seg_value1_f() {
-
-  if (first_val == 0) {
-    PORTD = val0D;
-    PORTB = val0B;
-    digitalWrite(9, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 1) {
-    PORTD = val1D;
-    PORTB = val1B;
-    digitalWrite(9, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 2) {
-    PORTD = val2D;
-    PORTB = val2B;
-    digitalWrite(9, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 3) {
-    PORTD = val3D;
-    PORTB = val3B;
-    digitalWrite(9, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 4) {
-    PORTD = val4D;
-    PORTB = val4B;
-    digitalWrite(9, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 5) {
-    PORTD = val5D;
-    PORTB = val5B;
-    digitalWrite(9, LOW);
-    delay(freq);
-
-  }
-
-  else if (first_val == 6) {
-    PORTD = val6D;
-    PORTB = val6B;
-    digitalWrite(9, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 7) {
-    PORTD = val7D;
-    PORTB = val7B;
-    digitalWrite(9, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 8) {
-    PORTD = val8D;
-    PORTB = val8B;
-    digitalWrite(9, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 9) {
-    PORTD = val9D;
-    PORTB = val9B;
-    digitalWrite(9, LOW);
-    delay(freq);
-  }
-
-}
-
-
-void display_seg_value1_l() {
-
-  if (second_val == 0) {
-    PORTD = val0D;
-    PORTB = val0B;
-    digitalWrite(10, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 1) {
-    PORTD = val1D;
-    PORTB = val1B;
-    digitalWrite(10, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 2) {
-    PORTD = val2D;
-    PORTB = val2B;
-    digitalWrite(10, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 3) {
-    PORTD = val3D;
-    PORTB = val3B;
-    digitalWrite(10, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 4) {
-    PORTD = val4D;
-    PORTB = val4B;
-    digitalWrite(10, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 5) {
-    PORTD = val5D;
-    PORTB = val5B;
-    digitalWrite(10, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 6) {
-    PORTD = val6D;
-    PORTB = val6B;
-    digitalWrite(10, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 7) {
-    PORTD = val7D;
-    PORTB = val7B;
-    digitalWrite(10, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 8) {
-    PORTD = val8D;
-    PORTB = val8B;
-    digitalWrite(10, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 9) {
-    PORTD = val9D;
-    PORTB = val9B;
-    digitalWrite(10, LOW);
-    delay(freq);
-  }
-
-}
-
-
-///////////////////////////////////
-
-void display_seg_value2_f() {
-
-  if (first_val == 0) {
-    PORTD = val0D;
-    PORTB = val0B;
-    digitalWrite(11, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 1) {
-    PORTD = val1D;
-    PORTB = val1B;
-    digitalWrite(11, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 2) {
-    PORTD = val2D;
-    PORTB = val2B;
-    digitalWrite(11, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 3) {
-    PORTD = val3D;
-    PORTB = val3B;
-    digitalWrite(11, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 4) {
-    PORTD = val4D;
-    PORTB = val4B;
-    digitalWrite(11, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 5) {
-    PORTD = val5D;
-    PORTB = val5B;
-    digitalWrite(11, LOW);
-    delay(freq);
-
-  }
-
-  else if (first_val == 6) {
-    PORTD = val6D;
-    PORTB = val6B;
-    digitalWrite(11, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 7) {
-    PORTD = val7D;
-    PORTB = val7B;
-    digitalWrite(11, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 8) {
-    PORTD = val8D;
-    PORTB = val8B;
-    digitalWrite(11, LOW);
-    delay(freq);
-  }
-
-  else if (first_val == 9) {
-    PORTD = val9D;
-    PORTB = val9B;
-    digitalWrite(11, LOW);
-    delay(freq);
-  }
-
-}
-
-
-void display_seg_value2_l() {
-
-  if (second_val == 0) {
-    PORTD = val0D;
-    PORTB = val0B;
-    digitalWrite(12, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 1) {
-    PORTD = val1D;
-    PORTB = val1B;
-    // digitalWrite(8,HIGH);
-    digitalWrite(12, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 2) {
-    PORTD = val2D;
-    PORTB = val2B;
-    digitalWrite(12, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 3) {
-    PORTD = val3D;
-    PORTB = val3B;
-    digitalWrite(12, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 4) {
-    PORTD = val4D;
-    PORTB = val4B;
-    digitalWrite(12, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 5) {
-    PORTD = val5D;
-    PORTB = val5B;
-    digitalWrite(12, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 6) {
-    PORTD = val6D;
-    PORTB = val6B;
-    digitalWrite(12, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 7) {
-    PORTD = val7D;
-    PORTB = val7B;
-    digitalWrite(12, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 8) {
-    PORTD = val8D;
-    PORTB = val8B;
-    digitalWrite(12, LOW);
-    delay(freq);
-  }
-
-  else if (second_val == 9) {
-    PORTD = val9D;
-    PORTB = val9B;
-    digitalWrite(12, LOW);
-    delay(freq);
-  }
-
-}
-void digit_splitter(int a) {
-
-  second_val = a % 10;
-  first_val  = (a - second_val) / 10;
-  //Serial.println(second_val);
-  //Serial.println(first_val);
-}
 
 void CollectData()
 {
