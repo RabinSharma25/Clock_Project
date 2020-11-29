@@ -90,7 +90,8 @@ void loop() {
   btst_new1 = digitalRead(button1);  // reading the state of  btnpin
   if (btst_old1 == 1 && btst_new1 == 0) {
     lcd.clear();
-    counter1++;
+    if(counter ==3) counter1++;
+   
   }
 
   //////////////////////////////// 2 /////////////////////////
@@ -345,13 +346,13 @@ void ClockEdit(int column, int row, int reg_address, String bucket) {
   if (counter2 == 1 && counter2_2 ==4&&counter1 ==2) {
 
     if (counter3 == 0)lcd.print("non");
-    else if (counter3 == 1)lcd.print("Sun");
-    else if (counter3 == 2)lcd.print("Mon");
-    else if (counter3 == 3)lcd.print("Tue");
-    else if (counter3 == 4)lcd.print("Wed");
-    else if (counter3 == 5)lcd.print("Thr");
-    else if (counter3 == 6)lcd.print("Fri");
-    else if (counter3 == 7)lcd.print("Sat");
+    else if (counter3 == 1)lcd.print("Sunday");
+    else if (counter3 == 2)lcd.print("Monday");
+    else if (counter3 == 3)lcd.print("Tuesday");
+    else if (counter3 == 4)lcd.print("Wednesday");
+    else if (counter3 == 5)lcd.print("Thrusday");
+    else if (counter3 == 6)lcd.print("Friday");
+    else if (counter3 == 7)lcd.print("Saturday");
   }
   else lcd.print(counter3);
   value = ((value / 10) << 4) + (value % 10);
